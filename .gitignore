@@ -1,1 +1,4 @@
 .cursor/
+target/
+README-CURSOR.md
+CURSOR-RULES-JAVA.md
