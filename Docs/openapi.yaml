@@ -1,0 +1,715 @@
+openapi: 3.0.3
+info:
+  title: Access System API
+  version: 0.0.1
+paths:
+  /health:
+    get:
+      summary: Health check
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: OK
+  /ingest/event:
+    post:
+      summary: Ingest checkpoint event
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IngestEventRequest'
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: accepted
+                  checkpointId:
+                    type: string
+        '400':
+          description: Validation error
+  /admin/users:
+    get:
+      summary: List users
+      parameters:
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+            maximum: 100
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PageResponseUser'
+    post:
+      summary: Create user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          description: Validation error
+  /admin/users/{id}:
+    get:
+      summary: Get user by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '404':
+          description: Not found
+    put:
+      summary: Update user
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '404':
+          description: Not found
+        '400':
+          description: Validation error
+    delete:
+      summary: Delete user
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: No content
+        '404':
+          description: Not found
+  /admin/zones:
+    get:
+      summary: List zones
+      parameters:
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+            maximum: 100
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PageResponseZone'
+    post:
+      summary: Create zone
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateZoneRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ZoneResponse'
+        '400':
+          description: Validation error
+  /admin/zones/{id}:
+    get:
+      summary: Get zone by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ZoneResponse'
+        '404':
+          description: Not found
+    put:
+      summary: Update zone
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateZoneRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ZoneResponse'
+        '404':
+          description: Not found
+        '400':
+          description: Validation error
+    delete:
+      summary: Delete zone
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: No content
+        '404':
+          description: Not found
+  /admin/checkpoints:
+    get:
+      summary: List checkpoints
+      parameters:
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+            maximum: 100
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PageResponseCheckpoint'
+    post:
+      summary: Create checkpoint
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCheckpointRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckpointResponse'
+        '400':
+          description: Validation error
+  /admin/checkpoints/{id}:
+    get:
+      summary: Get checkpoint by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckpointResponse'
+        '404':
+          description: Not found
+    put:
+      summary: Update checkpoint
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCheckpointRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckpointResponse'
+        '404':
+          description: Not found
+        '400':
+          description: Validation error
+    delete:
+      summary: Delete checkpoint
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: No content
+        '404':
+          description: Not found
+  /admin/access-rules:
+    get:
+      summary: List access rules
+      parameters:
+        - name: userId
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+            maximum: 100
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PageResponseAccessRule'
+    post:
+      summary: Create access rule
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAccessRuleRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessRuleResponse'
+        '400':
+          description: Validation error
+  /admin/access-rules/{id}:
+    get:
+      summary: Get access rule by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessRuleResponse'
+        '404':
+          description: Not found
+    put:
+      summary: Update access rule
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAccessRuleRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessRuleResponse'
+        '404':
+          description: Not found
+        '400':
+          description: Validation error
+    delete:
+      summary: Delete access rule
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: No content
+        '404':
+          description: Not found
+components:
+  schemas:
+    IngestEventRequest:
+      type: object
+      required:
+        - checkpointId
+        - timestamp
+        - fromZone
+        - toZone
+        - userToken
+        - signature
+      properties:
+        checkpointId:
+          type: string
+          example: cp-1
+        timestamp:
+          type: string
+          description: ISO-8601 UTC with 'Z'
+          example: 2025-01-01T12:00:00Z
+        fromZone:
+          type: string
+          example: zone-a
+        toZone:
+          type: string
+          example: zone-b
+        userToken:
+          type: string
+          example: abc123
+        signature:
+          type: string
+          example: sig==
+    CreateUserRequest:
+      type: object
+      required:
+        - code
+      properties:
+        code:
+          type: string
+          maxLength: 128
+          example: user-1
+    UpdateUserRequest:
+      type: object
+      required:
+        - code
+      properties:
+        code:
+          type: string
+          maxLength: 128
+          example: user-1-updated
+    UserResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 550e8400-e29b-41d4-a716-446655440000
+        code:
+          type: string
+          example: user-1
+        createdAt:
+          type: string
+          format: date-time
+          example: 2025-01-01T12:00:00Z
+    PageResponseUser:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserResponse'
+        total:
+          type: integer
+          example: 100
+        offset:
+          type: integer
+          example: 0
+        limit:
+          type: integer
+          example: 20
+    CreateZoneRequest:
+      type: object
+      required:
+        - code
+      properties:
+        code:
+          type: string
+          maxLength: 128
+          example: zone-a
+    UpdateZoneRequest:
+      type: object
+      required:
+        - code
+      properties:
+        code:
+          type: string
+          maxLength: 128
+          example: zone-a-updated
+    ZoneResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 550e8400-e29b-41d4-a716-446655440000
+        code:
+          type: string
+          example: zone-a
+        createdAt:
+          type: string
+          format: date-time
+          example: 2025-01-01T12:00:00Z
+    PageResponseZone:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ZoneResponse'
+        total:
+          type: integer
+          example: 50
+        offset:
+          type: integer
+          example: 0
+        limit:
+          type: integer
+          example: 20
+    CreateCheckpointRequest:
+      type: object
+      required:
+        - code
+        - toZoneId
+      properties:
+        code:
+          type: string
+          maxLength: 128
+          example: cp-1
+        fromZoneId:
+          type: string
+          format: uuid
+          nullable: true
+          example: 550e8400-e29b-41d4-a716-446655440000
+        toZoneId:
+          type: string
+          format: uuid
+          example: 550e8400-e29b-41d4-a716-446655440001
+    UpdateCheckpointRequest:
+      type: object
+      required:
+        - code
+        - toZoneId
+      properties:
+        code:
+          type: string
+          maxLength: 128
+          example: cp-1-updated
+        fromZoneId:
+          type: string
+          format: uuid
+          nullable: true
+          example: 550e8400-e29b-41d4-a716-446655440000
+        toZoneId:
+          type: string
+          format: uuid
+          example: 550e8400-e29b-41d4-a716-446655440001
+    CheckpointResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 550e8400-e29b-41d4-a716-446655440000
+        code:
+          type: string
+          example: cp-1
+        fromZoneId:
+          type: string
+          format: uuid
+          nullable: true
+          example: 550e8400-e29b-41d4-a716-446655440000
+        toZoneId:
+          type: string
+          format: uuid
+          example: 550e8400-e29b-41d4-a716-446655440001
+        createdAt:
+          type: string
+          format: date-time
+          example: 2025-01-01T12:00:00Z
+    PageResponseCheckpoint:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/CheckpointResponse'
+        total:
+          type: integer
+          example: 30
+        offset:
+          type: integer
+          example: 0
+        limit:
+          type: integer
+          example: 20
+    CreateAccessRuleRequest:
+      type: object
+      required:
+        - userId
+        - toZoneId
+      properties:
+        userId:
+          type: string
+          format: uuid
+          example: 550e8400-e29b-41d4-a716-446655440000
+        toZoneId:
+          type: string
+          format: uuid
+          description: Destination zone
+          example: 550e8400-e29b-41d4-a716-446655440001
+    UpdateAccessRuleRequest:
+      type: object
+      required:
+        - toZoneId
+      properties:
+        toZoneId:
+          type: string
+          format: uuid
+          description: Destination zone
+          example: 550e8400-e29b-41d4-a716-446655440001
+    AccessRuleResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 550e8400-e29b-41d4-a716-446655440000
+        userId:
+          type: string
+          format: uuid
+          example: 550e8400-e29b-41d4-a716-446655440000
+        toZoneId:
+          type: string
+          format: uuid
+          description: Destination zone
+          example: 550e8400-e29b-41d4-a716-446655440001
+        createdAt:
+          type: string
+          format: date-time
+          example: 2025-01-01T12:00:00Z
+    PageResponseAccessRule:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/AccessRuleResponse'
+        total:
+          type: integer
+          example: 200
+        offset:
+          type: integer
+          example: 0
+        limit:
+          type: integer
+          example: 20
+
+

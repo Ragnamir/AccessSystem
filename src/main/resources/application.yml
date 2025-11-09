@@ -1,0 +1,55 @@
+spring:
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/postgres}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    validate-on-migrate: true
+    out-of-order: false
+
+# Anti-replay protection configuration
+access-system:
+  anti-replay:
+    # Maximum allowed time skew for event timestamp (in seconds)
+    # Events with timestamp outside [now - skew, now + skew] will be rejected
+    timestamp-skew-seconds: ${TIMESTAMP_SKEW_SECONDS:300}
+    # TTL for storing eventId/nonce to prevent replay attacks (in seconds)
+    # Nonces are stored for this duration and then automatically cleaned up
+    event-nonce-ttl-seconds: ${EVENT_NONCE_TTL_SECONDS:86400}
+  notifications:
+    # Notification type: 'stub' for in-memory storage (testing), 'webhook' for HTTP webhook (future)
+    type: ${NOTIFICATION_TYPE:stub}
+    # Webhook URL for sending denial notifications (used when type=webhook)
+    webhook-url: ${NOTIFICATION_WEBHOOK_URL:}
+    # Maximum number of retry attempts for failed notifications
+    max-retries: ${NOTIFICATION_MAX_RETRIES:3}
+    # Delay between retry attempts in milliseconds
+    retry-delay-ms: ${NOTIFICATION_RETRY_DELAY_MS:1000}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    tags:
+      application: access-system
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+  flyway:
+    enabled: true
+

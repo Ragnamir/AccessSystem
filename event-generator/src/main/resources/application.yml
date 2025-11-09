@@ -1,0 +1,15 @@
+generator:
+  ingestUrl: "http://localhost:8080/ingest/event"
+  ratePerSecond: 1
+  seedDatabase: true
+  dbUrl: "jdbc:postgresql://localhost:5432/postgres"
+  dbUser: "postgres"
+  dbPassword: "postgres"
+
+spring:
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+  main:
+    web-application-type: none
+
+
